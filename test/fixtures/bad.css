@@ -1,0 +1,15 @@
+.hello {
+	background: red;
+}
+
+.hello .world .how.are .you .today {
+	pointer-events: none;
+}
+
+#id {
+	wat: wat;
+}
+
+.pointless#id {
+	wat: wat;
+}
