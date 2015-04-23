@@ -3,6 +3,7 @@
 const http = require('http');
 const createHandler = require('github-webhook-handler');
 const humps = require('humps');
+const winston = require('winston');
 
 const config = require('./config');
 const getFileFromBranch = require('./get-file');
@@ -28,27 +29,38 @@ handler.on('pull_request', function (event) {
 		return;
 	}
 
+	winston.info('Activity on PR #%s. Analysing.', pr.number);
+
 	let msg = {
 		user: pr.head.repo.owner.login,
 		repo: pr.head.repo.name,
 		number: pr.number
 	};
 
-	let baseRef = pr.base.ref;
-	let headRef = pr.head.ref;
+	let masterFile, branchFile;
 
 	prContainsCss(msg)
 		.then(function (containsCss) {
-			console.log('Contains css:', containsCss);
+			if (!containsCss) {
+				winston.info('PR #%s contains no CSS, aborting', pr.number);
+				throw new Error('No CSS: abort early');
+			}
 
-			return getFileFromBranch(baseRef, config.parker.filename);
+			return getFileFromBranch(pr.base.ref, config.parker.filename);
 		})
 		.then(function (data) {
-			console.log('Master file:', data.toString());
+			masterFile = data;
 
-			return getFileFromBranch(headRef, config.parker.filename);
+			return getFileFromBranch(pr.head.ref, config.parker.filename);
 		})
 		.then(function (data) {
-			console.log('otherBranch file:', data.toString());
+			branchFile = data;
+
+			winston.info('Got files for PR #%s', pr.number);
+		})
+		.catch(function (err) {
+			if (err.message.indexOf('abort early') === -1) {
+				winston.error(err);
+			}
 		});
 });
