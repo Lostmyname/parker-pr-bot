@@ -1,0 +1,18 @@
+git:
+  repo:
+  clone_to: ./repository
+
+github:
+  hook_secret:
+  token:
+
+  run_on:
+    - opened
+    - synchronize
+
+server:
+  port: 8080
+  hostname: 127.0.0.1
+
+parker:
+  filename:
