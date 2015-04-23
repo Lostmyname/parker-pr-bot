@@ -2,6 +2,8 @@
 
 const Parker = require('parker/lib/Parker');
 const metrics = require('parker/metrics/All');
+const parker = new Parker(metrics);
+
 const _ = require('lodash');
 const humps = require('humps');
 
@@ -36,7 +38,6 @@ function analyse(masterFile, branchFile) {
 }
 
 function runParker(file) {
-	let parker = new Parker(metrics);
 	return parker.run(file);
 }
 
