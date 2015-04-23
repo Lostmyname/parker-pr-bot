@@ -3,6 +3,7 @@
 const path = require('path');
 const git = require('nodegit');
 const promisify = require('promisify-node');
+const exec = promisify(require('child_process').exec);
 const fs = promisify(require('graceful-fs'));
 const winston = require('winston');
 
@@ -58,7 +59,22 @@ function getFileFromBranch(branch, filePath) {
 			}
 		})
 		.then(function () {
-			repo.mergeBranches(branch, 'origin/' + branch);
+			return repo.mergeBranches(branch, 'origin/' + branch);
+		})
+		.then(function () {
+			if (!config.parker.build) {
+				return;
+			}
+
+			let build = [].concat(config.parker.build);
+			let options = { cwd: config.git.cloneTo };
+			let initialPromise = exec(build.splice(0, 1), options);
+
+			return build.reduce(function (promise, command) {
+				return promise.then(function () {
+					return exec(command, options);
+				});
+			}, initialPromise);
 		})
 		.then(function () {
 			return fs.readFile(path.join(config.git.cloneTo, filePath));

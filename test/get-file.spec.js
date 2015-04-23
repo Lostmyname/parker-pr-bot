@@ -49,4 +49,27 @@ describe('get-file()', function () {
 				data.toString().should.equal('/* fake css for test */\n');
 			});
 	});
+
+	// Only works if branch is already "test"
+	it('should ensure build commands have ran', function () {
+		config.parker.build = [
+			'echo "abc" > test.css',
+			'echo "def" >> test.css'
+		];
+
+		return getFileFromBranch('test', 'test.css')
+			.then(function (data) {
+				data.toString().should.equal('abc\ndef\n');
+			});
+	});
+
+	it('should ensure failure when build fails', function (done) {
+		config.parker.build = 'blablanotfound';
+
+		return getFileFromBranch('test', 'test.css')
+			.catch(function (err) {
+				err.toString().should.containEql('command not found');
+				done();
+			});
+	});
 });
