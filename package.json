@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "start": "node ./src/web-hook"
   },
   "author": "Callum Macrae <callum@macr.ae>",
   "license": "MIT",
   "dependencies": {
+    "fs-extra": "^0.18.2",
     "github": "^0.2.3",
     "github-webhook-handler": "^0.3.4",
     "graceful-fs": "^3.0.6",
@@ -28,8 +29,5 @@
   },
   "engines": {
     "iojs": "1.x"
-  },
-  "scripts": {
-    "start": "node ./src/web-hook"
   }
 }
