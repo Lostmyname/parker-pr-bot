@@ -11,7 +11,7 @@ function prContainsCss(pr) {
 	return getFiles(msg)
 		.then(function (files) {
 			return files.some(function (file) {
-				return /\.css$/.test(file.filename);
+				return /\.(?:sc|sa|c)ss$/.test(file.filename);
 			});
 		});
 }
