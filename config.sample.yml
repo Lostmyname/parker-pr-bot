@@ -15,5 +15,28 @@ server:
   hostname: 127.0.0.1
 
 parker:
-  ls:
-  filename:
+  build:
+    - npm install
+    - gulp scss
+  filename: public/assets/mermaid/stylesheets/styles.css
+  metrics:
+    total-stylesheet-size:
+      good: -2000
+      warn: +2000
+      bad: +10000
+    total-selectors:
+      good: -50
+      warn: +50
+      bad: +100
+    top-selector-specificity:
+      good: -1
+      bad: +1
+    total-id-selectors:
+      good: -1
+      bad: +1
+    total-important-keywords:
+      good: -1
+      bad: +1
+    total-media-queries:
+      warn: +1
+
