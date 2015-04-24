@@ -2,12 +2,18 @@
 
 const http = require('http');
 const createHandler = require('github-webhook-handler');
+const github = require('./github');
 const humps = require('humps');
+const promisify = require('promisify-node');
 const winston = require('winston');
 
 const config = require('./config');
+const analyse = require('./analyse');
+const generateComment = require('./comment');
 const getFileFromBranch = require('./get-file');
 const prContainsCss = require('./pr-contains-css');
+
+let createComment = promisify(github.issues).createComment;
 
 let handler = createHandler({ path: '/', secret: config.github.hookSecret });
 
@@ -56,7 +62,25 @@ handler.on('pull_request', function (event) {
 		.then(function (data) {
 			branchFile = data;
 
-			winston.info('Got files for PR #%s', pr.number);
+			winston.info('Got files for PR #%s, analysing', pr.number);
+
+			return analyse(masterFile.toString(), branchFile.toString());
+		})
+		.then(function (judgement) {
+			if (!judgement.bad && !judgement.warn) {
+				throw new Error('No errors: abort early');
+			}
+
+			winston.info('PR #%s is not okay :( commenting now!', pr.number);
+
+			return generateComment(judgement);
+		})
+		.then(function (comment) {
+			msg.body = comment;
+			return createComment(msg);
+		})
+		.then(function () {
+			winston.info('Okay, commented on PR #%s.', pr.number);
 		})
 		.catch(function (err) {
 			if (err.message.indexOf('abort early') === -1) {
