@@ -25,5 +25,11 @@
     "del": "^1.1.1",
     "mocha": "^2.2.1",
     "should": "^5.2.0"
+  },
+  "engines": {
+    "iojs": "1.x"
+  },
+  "scripts": {
+    "start": "node ./src/web-hook"
   }
 }
