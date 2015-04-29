@@ -15,6 +15,8 @@ describe('get-file()', function () {
 
 		config.git.cloneTo = './test/fixtures/repository';
 		config.git.repo = 'git@github.com:callumacrae/test-hook.git';
+
+		config.parker.build = '';
 	});
 
 	this.timeout(5000);
