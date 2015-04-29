@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/web-hook"
+    "start": "node ./src/web-hook",
+    "test": "mocha"
   },
   "author": "Callum Macrae <callum@macr.ae>",
   "license": "MIT",
