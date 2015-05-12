@@ -18,7 +18,7 @@
     "js-yaml": "^3.2.7",
     "lodash": "^3.7.0",
     "markdown-table": "^0.4.0",
-    "nodegit": "nodegit/nodegit",
+    "nodegit": "^0.4.0",
     "parker": "0.0.8",
     "promisify-node": "^0.1.5",
     "winston": "^0.9.0"
